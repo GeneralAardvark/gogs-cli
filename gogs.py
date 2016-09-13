@@ -77,8 +77,8 @@ def main():
     output_opts.add_argument('-ssh', help="Show git ssh url", action="store_true")
 
     branches = options.add_mutually_exclusive_group()
-    branches.add_argument('-branch', help="Show branches.", action="store_true")
-    branches.add_argument('-mybranch', help="Show my branches.", action="store_true")
+    branches.add_argument('-branches', help="Show branches.", action="store_true")
+    branches.add_argument('-mybranches', help="Show my branches.", action="store_true")
 
     parser.add_argument('search', nargs="?", help="Search term for repo.", default=".")
 
@@ -103,10 +103,10 @@ def main():
                 output += " {}{}{}".format(cOut.red, repo['html_url'], cOut.end)
             if args.ssh:
                 output += " {}{}{}".format(cOut.green, repo['ssh_url'], cOut.end)
-            if args.branch or args.mybranch:
+            if args.branches or args.mybranches:
                 branches = callAPI('repos/{}/branches'.format(repo['full_name']))
                 for branch in branches:
-                    if args.mybranch:
+                    if args.mybranches:
                         if branch['commit']['author']['username'] != username:
                             continue
                     print(output)
