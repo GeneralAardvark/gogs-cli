@@ -18,7 +18,7 @@ username: <username>
 ## Command line options
 
 ```
-usage: gogs [-h] [-clone] [-url] [-ssh] [-branch | -mybranch] [search]
+usage: gogs [-h] [-clone] [-url] [-ssh] [-branches | -mybranches] [search]
 
 Dirty Gogs Repo Searcher
 
@@ -34,22 +34,12 @@ optional arguments:
 
 ## Example Usage
 
-List all repos
+List all repos `gogs`
 
-`gogs`
+Search for repositories `gogs <search>`
 
-Search for repositories
+Display URL to repositories `gogs <search> -url`
 
-`gogs <search>`
+Git clone repositories locally. `gogs <search> -clone | bash`
 
-Display URL to repositories
-
-`gogs <search> -url`
-
-Git clone repositories locally.
-
-`gogs <search> -clone | bash`
-
-Find branches currently owned by me (last commited)
-
-`gogs <search> -mybranch`
+Find branches currently owned by me (last commited) `gogs <search> -mybranches`
