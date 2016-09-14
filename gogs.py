@@ -35,7 +35,7 @@ def validateConfig(c):
     api += "/{}"
     s.headers = {'Authorization':'token {}'.format(token)}
     try:
-        r = callAPI('users/{}'.format(username), True)
+        r = callAPI('user/', True)
     except:
         sys.exit("Error connecting to {}.".format(gogs_host))
     if r.status_code == 404:
@@ -44,7 +44,8 @@ def validateConfig(c):
         sys.exit("Unable to authenticate with token specified.")
     if r.status_code != 200:
         sys.exit("Got a {} when connecting to {}.".format(r.status_code, gogs_user))
-
+    if r.json()['username'] != username:
+        sys.exit("Token and username, {}, do not match.".format(username))
 
 def callAPI(command, test=False):
     r = s.get(api.format(command))
