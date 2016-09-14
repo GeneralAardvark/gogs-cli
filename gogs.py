@@ -1,8 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import requests
 import argparse
-from configparser import ConfigParser
+try:
+    from configparser import ConfigParser
+except:
+    from ConfigParser import ConfigParser
 import sys
 import os
 import re
@@ -19,7 +22,7 @@ def readConfig():
         c = []
         for e in ('gogs_host', 'token', 'username'):
             try:
-                c.append(cfg['gogs'][e])
+                c.append(cfg.get('gogs', e))
             except:
                 sys.exit("'{}' missing or incorrectly formatted in {}.".format(e, cfg_file))
         return c
