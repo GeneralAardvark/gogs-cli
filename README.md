@@ -18,7 +18,7 @@ username: <username>
 ## Command line options
 
 ```
-usage: gogs [-h] [-clone] [-url] [-ssh] [-branches | -mybranches] [search]
+usage: gogs [-h] [-clone] [-ssh] [-branches | -mybranches] [search]
 
 Dirty Gogs Repo Searcher
 
@@ -37,8 +37,6 @@ optional arguments:
 List all repos `gogs`
 
 Search for repositories `gogs <search>`
-
-Display URL to repositories `gogs <search> -url`
 
 Git clone repositories locally. `gogs <search> -clone | bash`
 

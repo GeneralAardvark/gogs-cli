@@ -77,7 +77,6 @@ def main():
     options.add_argument('-clone', help="git clone commands.", action="store_true")
 
     output_opts = options.add_argument_group()
-    output_opts.add_argument('-url', help="Show URL link", action="store_true")
     output_opts.add_argument('-ssh', help="Show git ssh url", action="store_true")
 
     branches = options.add_mutually_exclusive_group()
@@ -103,8 +102,7 @@ def main():
                 print("git clone {}".format(repo['ssh_url']))
                 continue
             output = repo['full_name']
-            if args.url:
-                output += " {}{}{}".format(cOut.red, repo['html_url'], cOut.end)
+            output += " {}{}{}".format(cOut.red, repo['html_url'], cOut.end)
             if args.ssh:
                 output += " {}{}{}".format(cOut.green, repo['ssh_url'], cOut.end)
             if args.branches or args.mybranches:
