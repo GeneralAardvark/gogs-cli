@@ -41,3 +41,7 @@ Search for repositories `gogs <search>`
 Git clone repositories locally. `gogs <search> -clone | bash`
 
 Find branches currently owned by me (last commited) `gogs <search> -mybranches`
+
+Find branches owned by other people `gogs [<search>] -branches --user
+<someone>`
+

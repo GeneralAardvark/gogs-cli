@@ -21,7 +21,7 @@ def choose_schema(gogs_host):
     for schema in ("https://", "http://"):
         try:
             api = "{}{}/api/v1/".format(schema, gogs_host)
-            r = call_api('user/', True)
+            r = s.get(api + 'user/', timeout=1)
             if not r.status_code:
                 continue
             else:
@@ -31,6 +31,7 @@ def choose_schema(gogs_host):
         except ConnectionError:
             break
     sys.exit("Error connecting to {}.".format(gogs_host))
+
 
 def read_config():
     cfg = ConfigParser()
@@ -63,9 +64,7 @@ def validate_config(c):
 
 
 def call_api(command, test=False):
-    r = s.get(api + command, timeout=1)
-    if test:
-        return r
+    r = s.get(api + command)
     if r.status_code == 200:
         return r.json()
     # Code to get around 500 error when getting branches for empty repos.
@@ -92,7 +91,11 @@ def main():
     branches.add_argument('-branches', help="Show branches.", action="store_true")
     branches.add_argument('-mybranches', help="Show my branches.", action="store_true")
     parser.add_argument('search', nargs="?", help="Search term for repo.", default=".")
+    parser.add_argument('--user', help="Find -branches owned by specified user.")
     args = parser.parse_args()
+
+    if args.user and not args.branches:
+        parser.error("--user argument used in conjunction with -branches.")
 
     validate_config(read_config())
 
@@ -102,6 +105,8 @@ def main():
         sys.exit('Error, no repos to list')
 
     searchterm = re.compile(args.search, re.I)
+    if args.user:
+        user_search = re.compile(args.user, re.I)
 
     for repo in repos:
         if searchterm.search(repo['full_name']):
@@ -117,6 +122,9 @@ def main():
                 for branch in branches:
                     if args.mybranches:
                         if branch['commit']['author']['username'] != username:
+                            continue
+                    elif args.user:
+                        if not user_search.search(branch['commit']['author']['username']):
                             continue
                     print(output)
                     print("\t{}{} {}{}{}".format(
