@@ -9,11 +9,29 @@ except:
 import sys
 import os
 import re
+from requests.exceptions import ConnectTimeout, ConnectionError
 
 cfg = ConfigParser()
 cfg_file = os.path.join(os.path.expanduser("~"), '.config', 'gogs.cfg')
 s = requests.Session()
 
+
+def choose_schema(gogs_host):
+    global api
+    for schema in ("https://", "http://"):
+        try:
+            api = "{}{}/api/v1/".format(schema, gogs_host)
+            r = call_api('user/', True)
+            print r
+            if not r.status_code:
+                continue
+            else:
+                return r
+        except ConnectTimeout:
+            continue
+        except ConnectionError:
+            break
+    sys.exit("Error connecting to {}.".format(gogs_host))
 
 def read_config():
     cfg = ConfigParser()
@@ -31,16 +49,10 @@ def read_config():
 
 
 def validate_config(c):
-    global api
     global username
     gogs_host, token, username = c
-    api = "https://{}/api/v1".format(gogs_host)
-    api += "/{}"
     s.headers = {'Authorization': 'token {}'.format(token)}
-    try:
-        r = call_api('user/', True)
-    except:
-        sys.exit("Error connecting to {}.".format(gogs_host))
+    r = choose_schema(gogs_host)
     if r.status_code == 404:
         sys.exit("Does username {}, exist?".format(username))
     if r.status_code == 403:
@@ -52,7 +64,7 @@ def validate_config(c):
 
 
 def call_api(command, test=False):
-    r = s.get(api.format(command))
+    r = s.get(api + command, timeout=1)
     if test:
         return r
     if r.status_code == 200:
