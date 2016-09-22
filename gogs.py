@@ -22,7 +22,6 @@ def choose_schema(gogs_host):
         try:
             api = "{}{}/api/v1/".format(schema, gogs_host)
             r = call_api('user/', True)
-            print r
             if not r.status_code:
                 continue
             else:
