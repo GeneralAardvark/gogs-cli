@@ -109,6 +109,7 @@ def main():
         user_search = re.compile(args.user, re.I)
 
     for repo in repos:
+        name_printed = False
         if searchterm.search(repo['full_name']):
             if args.clone:
                 print("git clone {}".format(repo['ssh_url']))
@@ -126,7 +127,9 @@ def main():
                     elif args.user:
                         if not user_search.search(branch['commit']['author']['username']):
                             continue
-                    print(output)
+                    if not name_printed:
+                        print(output)
+                        name_printed = True
                     print("\t{}{} {}{}{}".format(
                         colour.green,
                         branch['commit']['author']['username'],
